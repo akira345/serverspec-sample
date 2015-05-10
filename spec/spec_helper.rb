@@ -1,7 +1,14 @@
 require 'serverspec'
 require 'net/ssh'
+require 'pathname'
 
+set :request_pty, true
 set :backend, :ssh
+
+base_spec_dir = Pathname.new(File.join(File.dirname(__FILE__)))
+
+Dir[base_spec_dir.join('../shared/**/*.rb')].sort.each{ |f| require f }
+
 
 if ENV['ASK_SUDO_PASSWORD']
   begin

@@ -1,28 +1,18 @@
 require 'spec_helper'
+require 'pp'
+pp os
 
-describe package('httpd'), :if => os[:family] == 'redhat' do
-  it { should be_installed }
-end
-
-describe package('apache2'), :if => os[:family] == 'ubuntu' do
-  it { should be_installed }
-end
-
-describe service('httpd'), :if => os[:family] == 'redhat' do
-  it { should be_enabled }
-  it { should be_running }
-end
-
-describe service('apache2'), :if => os[:family] == 'ubuntu' do
-  it { should be_enabled }
-  it { should be_running }
-end
-
-describe service('org.apache.httpd'), :if => os[:family] == 'darwin' do
-  it { should be_enabled }
-  it { should be_running }
-end
-
-describe port(80) do
-  it { should be_listening }
+describe "example.comのテスト" do
+  #Apache共通事項テスト
+  include_examples 'apache::default'
+  
+  describe "VirtualHostの設定テスト" do
+    describe file('/etc/httpd/conf.d/example.com.conf') do
+      it { should be_file }
+      it { should contain "ServerName example.com" }
+      it { should contain("*:443").after(/VirtualHost/) }
+      it { should contain("*:80").after(/VirtualHost/) }
+      it { should contain "DocumentRoot /var/www/html" }
+    end
+  end
 end
