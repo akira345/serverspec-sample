@@ -3,6 +3,20 @@ require 'pp'
 pp os
 
 describe "example.comのテスト" do
+  #システム共通事項テスト
+  #テストするポート番号
+  ports = ["80","443","22"]
+  #テストするパッケージたち
+  packages = ["ntpd","httpd","vsftpd"]
+  
+  #パラメータセット
+  params = {
+            :ports => ports,
+            :packages => packages,
+            }
+  #テスト呼び出し
+  include_examples 'system::default', params
+
   #Apache共通事項テスト
   include_examples 'apache::default'
   
